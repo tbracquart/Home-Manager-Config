@@ -73,4 +73,66 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # ==========================================
+  #  GIT (identité perso, migrée depuis NixOS-Config)
+  # ==========================================
+
+  programs.git = {
+    enable = true;
+    settings.user.name = "Thibaut Bracquart";
+    settings.user.email = "202062783+tbracquart@users.noreply.github.com";
+  };
+
+  # ==========================================
+  #  FISH (fonctions perso, migrées depuis NixOS-Config)
+  #  Note : l'activation système de Fish (programs.fish.enable)
+  #  reste dans NixOS-Config, requise pour users.users.thibaut.shell.
+  #  Ici on gère uniquement le contenu propre à l'utilisateur.
+  # ==========================================
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      fastfetch
+      echo
+
+      function clr
+        clear
+        fastfetch
+        echo
+      end
+
+      function rebuild
+        sudo nixos-rebuild switch
+      end
+
+      function update
+        sudo nix-channel --update
+      end
+
+      function upgrade
+        sudo nixos-rebuild switch --upgrade
+      end
+
+      function nixpush
+        cd /etc/nixos
+        sudo git add .
+        sudo git status
+        read -P "Message de commit : " commit_msg
+        sudo git commit -m "$commit_msg"
+        sudo git push
+      end
+
+      function hmpush
+        cd ~/.config/home-manager
+        git add .
+        git status
+        read -P "Message de commit : " commit_msg
+        git commit -m "$commit_msg"
+        git push
+      end
+
+    '';
+  };
 }
