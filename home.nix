@@ -103,18 +103,6 @@
         echo
       end
 
-      function rebuild
-        sudo nixos-rebuild switch
-      end
-
-      function update
-        sudo nix-channel --update
-      end
-
-      function upgrade
-        sudo nixos-rebuild switch --upgrade
-      end
-
       function nixpush
         cd /etc/nixos
         sudo git add .
@@ -132,7 +120,6 @@
         git commit -m "$commit_msg"
         git push
       end
-
     '';
   };
 }
