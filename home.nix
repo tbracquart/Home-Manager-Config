@@ -120,16 +120,11 @@
       ) 9);
     };
 
-    # Contournement du bug actuel sur exec-once en Lua (hl.exec-once invalide) :
-    # on passe par un fichier Lua dédié chargé automatiquement.
-    extraLuaFiles."autostart" = {
-      text = ''
-        hl.on("hyprland.start", function()
-          hl.exec_cmd("waybar")
-        end)
-      '';
-      autoLoad = true;
-    };
+    extraConfig = ''
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("waybar")
+      end)
+    '';
   };
 
   xdg.configFile."uwsm/env".source =
