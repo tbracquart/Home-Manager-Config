@@ -8,8 +8,6 @@
 
   home.packages = with pkgs; [ kdePackages.kate kdePackages.kdeconnect-kde netflix ytmdesktop klavaro];
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
   home.file = {
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
@@ -23,22 +21,6 @@
     # '';
   };
 
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/thibaut/etc/profile.d/hm-session-vars.sh
-  #
   home.sessionVariables = {
     EDITOR = "vim";
   };
@@ -117,7 +99,41 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = false;     # important : UWSM gère déjà le systemd, sinon conflit
+    xwayland.enable = true;
+    configType = "lua";         # config en Lua (nouveau standard depuis Hyprland 0.55)
+
+    settings = {
+      "$mod" = "SUPER";         # bien quoter les variables : sinon erreur de parsing Lua
+
+      monitor = ",preferred,auto,auto";
+
+      bind = [
+        "$mod, Return, exec, kitty"
+        "$mod, Q, killactive"
+        "$mod, E, exec, dolphin"
+      ] ++ builtins.concatLists (builtins.genList (i:
+        let ws = i + 1; in [
+          "$mod, code:1${toString i}, workspace, ${toString ws}"
+          "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+        ]
+      ) 9);
+    };
+
+    # Contournement du bug actuel sur exec-once en Lua (hl.exec-once invalide) :
+    # on passe par un fichier Lua dédié chargé automatiquement.
+    extraLuaFiles."autostart" = {
+      text = ''
+        hl.on("hyprland.start", function()
+          hl.exec_cmd("waybar")
+        end)
+      '';
+      autoLoad = true;
+    };
   };
+
+  xdg.configFile."uwsm/env".source =
+    "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
 
   programs.kitty.enable = true;
 
