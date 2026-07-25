@@ -3,7 +3,13 @@
 {
   programs.plasma = {
     enable = true;
-    # ... votre configuration
-    # (vous pouvez ajouter ce que vous voulez ici)
+
+    workspace = {
+      lookAndFeel = "Utterly-Sweet";
+      colorScheme = "UtterlySweet";
+    };
+
+    icons.theme = "BeautySolar";
+    widgets.style = "Breeze";
   };
 }

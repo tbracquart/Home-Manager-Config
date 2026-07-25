@@ -1,10 +1,8 @@
 { config, pkgs, ... }:
 
-{ config, pkgs, ... }:
-
 {
   imports = [
-    <plasma-manager/modules/home-manager>  # 👈 Chemin corrigé
+    <plasma-manager/modules>  # ✅ Chemin correct
     ./modules/plasma.nix
     ./modules/packages.nix
     ./modules/shell.nix
