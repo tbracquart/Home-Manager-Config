@@ -2,10 +2,16 @@
 
 {
   programs.kitty.enable = true;
+
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "lua";
+
+    # UWSM gère le cycle de vie de la session (voir modules/hyprland.nix côté
+    # NixOS, programs.hyprland.withUWSM = true). Home Manager ne doit donc PAS
+    # lancer son propre service systemd pour Hyprland.
     systemd.enable = false;
+
     settings = { };
 
     extraConfig = ''
@@ -17,21 +23,23 @@
           gaps_in = 5,
           gaps_out = 20,
           border_size = 2,
-          -- ✅ Correction : couleur unique
           ["col.active_border"] = "0xff33ccff",
           ["col.inactive_border"] = "0xff595959",
           layout = "dwindle"
         },
         decoration = {
           rounding = 10,
+          rounding_power = 2,
           blur = {
             enabled = true,
             size = 3,
-            passes = 1
+            passes = 2,
+            vibrancy = 0.1696
           },
           shadow = {
             enabled = true,
             range = 4,
+            render_power = 3,
             color = 0xee1a1a1a
           }
         },
@@ -57,13 +65,27 @@
       })
 
       -- ============================================================
+      --  RÈGLES DE CALQUE (Noctalia) — flou de la barre et des panneaux
+      -- ============================================================
+      -- cf. https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
+      hl.layer_rule({
+        name = "noctalia",
+        match = { namespace = "noctalia-background-.*$" },
+        ignore_alpha = 0.5,
+        blur = true,
+        blur_popups = true
+      })
+
+      -- ============================================================
       --  RACCOURCIS CLAVIER (hl.bind)
       -- ============================================================
       local mainMod = "SUPER"
 
       -- Lancements
       hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("kitty"))
-      hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("wofi --show drun"))
+      -- Le lanceur d'applications est fourni par Noctalia (pas besoin de
+      -- wofi/rofi) : voir les keybinds par défaut de Noctalia pour le bind
+      -- exact du launcher (SUPER + D peut rester réservé à Noctalia).
       hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
       -- Gestion des fenêtres
@@ -82,7 +104,6 @@
       hl.bind(mainMod .. " + 9", hl.dsp.focus({ workspace = 9 }))
       hl.bind(mainMod .. " + 0", hl.dsp.focus({ workspace = 10 }))
 
-      -- ✅ Correction : utiliser hl.dsp.window.move({ workspace = N })
       hl.bind(mainMod .. " + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
       hl.bind(mainMod .. " + SHIFT + 2", hl.dsp.window.move({ workspace = 2 }))
       hl.bind(mainMod .. " + SHIFT + 3", hl.dsp.window.move({ workspace = 3 }))
@@ -114,9 +135,9 @@
       -- ============================================================
       --  LANCEMENT AU DÉMARRAGE (hl.on)
       -- ============================================================
-      hl.on("hyprland.start", function()
-        hl.exec_cmd("noctalia")
-      end)
+      -- Noctalia est déjà démarré/géré par le module NixOS
+      -- (programs.noctalia.enable = true, cf. configuration.nix) : on ne le
+      -- relance PAS ici pour éviter un double lancement.
 
       -- ============================================================
       --  ANIMATIONS
