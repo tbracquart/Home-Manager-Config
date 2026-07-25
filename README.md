@@ -1,5 +1,10 @@
 # Home Manager Config
 
+![Static Badge](https://img.shields.io/badge/NixOS-25.05-blue)
+![Static Badge](https://img.shields.io/badge/Home_Manager-standalone-green)
+![Static Badge](https://img.shields.io/badge/Shell-Fish-4c6e91)
+![Static Badge](https://img.shields.io/badge/DE-Hyprland-7c52a1)
+
 Ma configuration [Home Manager](https://github.com/nix-community/home-manager), séparée de ma configuration système NixOS.
 
 Ce dépôt gère tout ce qui est propre à **mon compte utilisateur** : packages personnels, dotfiles, configuration d'applications. Il est volontairement indépendant de la configuration système pour rester propre au niveau des permissions : la config système appartient à `root`, celle-ci m'appartient.
