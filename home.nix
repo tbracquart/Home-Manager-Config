@@ -6,7 +6,7 @@
     ./modules/plasma.nix
     ./modules/packages.nix
     ./modules/shell.nix
-    ./modules/git.nix
+    ./modules/programs.nix
     ./modules/hyprland.nix
     ./modules/services.nix
     ./modules/variables.nix
