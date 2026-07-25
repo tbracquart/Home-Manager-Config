@@ -135,9 +135,15 @@
       -- ============================================================
       --  LANCEMENT AU DÉMARRAGE (hl.on)
       -- ============================================================
-      -- Noctalia est déjà démarré/géré par le module NixOS
-      -- (programs.noctalia.enable = true, cf. configuration.nix) : on ne le
-      -- relance PAS ici pour éviter un double lancement.
+      -- programs.noctalia.enable (module NixOS) installe le paquet et gère
+      -- la config déclarative, mais NE lance PAS le shell tout seul.
+      -- Le lancement via le compositeur est la méthode officiellement
+      -- recommandée (le démarrage via service systemd est déprécié).
+      -- ⚠️ Ne pas activer en même temps un service systemd Noctalia
+      -- (programs.noctalia.systemd.enable) sous peine de double instance.
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("noctalia")
+      end)
 
       -- ============================================================
       --  ANIMATIONS
