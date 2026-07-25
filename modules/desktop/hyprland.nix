@@ -1,32 +1,45 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-{
+let
+  # Définir des helpers pour le Lua
+  lua = lib.generators.mkLuaInline;
+  bind = key: action: {
+    _args = [
+      key
+      (lua action)
+    ];
+  };
+  exec = cmd: "hl.dsp.exec_cmd(\"${cmd}\")";
+in {
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = false;
-    xwayland.enable = true;
-    configType = "lua";
 
-    settings = {
-      "$mod" = "SUPER";
-      monitor = ",preferred,auto,auto";
+    # Optionnel : Spécifier une version particulière depuis nixpkgs-unstable
+    # package = pkgs.hyprland;
+  };
 
-      bind = [
-        "$mod, Return, exec, kitty"
-        "$mod, Q, killactive"
-        "$mod, E, exec, dolphin"
-      ] ++ builtins.concatLists (builtins.genList (i:
-        let ws = i + 1; in [
-          "$mod, code:1${toString i}, workspace, ${toString ws}"
-          "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-        ]
-      ) 9);
+  # La configuration Lua se fait via `settings`
+  wayland.windowManager.hyprland.settings = {
+    # Variables Lua
+    mod = {
+      _var = "SUPER";
     };
 
-    extraConfig = ''
-      hl.on("hyprland.start", function()
-        hl.exec_cmd("waybar")
-      end)
-    '';
+    # Configuration principale
+    config = {
+      general = {
+        gaps_in = 5;
+        gaps_out = 20;
+        border_size = 2;
+        # ... tes réglages
+      };
+    };
+
+    # Raccourcis clavier (exemple)
+    bind = [
+      (bind "SUPER + RETURN" (exec "kitty"))
+      (bind "SUPER + D" (exec "wofi"))
+      (bind "SUPER + SHIFT + S" (exec "hyprshot -m region -z --clipboard only"))
+    ];
   };
 }
