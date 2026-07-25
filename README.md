@@ -66,7 +66,7 @@ nix-shell '<home-manager>' -A install
 # Cloner et utiliser cette configuration
 git clone https://github.com/tbracquart/Home-Manager-Config ~/Home-Manager-Config
 rm ~/.config/home-manager/home.nix
-ln -s ~/Home-Manager-Config/home.nix ~/.config/home-manager/home.nix
+mv ~/Home-Manager-Config/home.nix ~/.config/home-manager/home.nix
 
 # Appliquer la configuration
 home-manager switch
