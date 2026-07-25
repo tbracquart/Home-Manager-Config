@@ -1,7 +1,5 @@
 # Home Manager Config
 
-> 🇫🇷 Version française — [🇬🇧 English version here](./README.en.md)
-
 Ma configuration [Home Manager](https://github.com/nix-community/home-manager), séparée de ma configuration système NixOS.
 
 Ce dépôt gère tout ce qui est propre à **mon compte utilisateur** : packages personnels, dotfiles, configuration d'applications. Il est volontairement indépendant de la configuration système pour rester propre au niveau des permissions : la config système appartient à `root`, celle-ci m'appartient.
