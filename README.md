@@ -1,10 +1,3 @@
-J'ai regardé le README sur ton GitHub. Tu as raison, il ne reflète plus du tout l'état actuel de ta configuration. Voici une proposition de mise à jour qui colle à la structure modulaire qu'on a construite ensemble.
-
----
-
-## Proposition de nouveau README.md
-
-```markdown
 # Home Manager Config
 
 Ma configuration [Home Manager](https://github.com/nix-community/home-manager), séparée de ma configuration système NixOS.
@@ -127,7 +120,3 @@ git add README.md
 git commit -m "docs: update README to reflect current modular structure"
 git push
 ```
-
----
-
-**Le README est maintenant à jour et documente toute ta structure modulaire.** 👍
