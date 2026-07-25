@@ -1,6 +1,6 @@
 # Home Manager Config
 
-![Static Badge](https://img.shields.io/badge/NixOS-25.05-blue)
+![Static Badge](https://img.shields.io/badge/NixOS-26.05-blue)
 ![Static Badge](https://img.shields.io/badge/Home_Manager-standalone-green)
 ![Static Badge](https://img.shields.io/badge/Shell-Fish-4c6e91)
 ![Static Badge](https://img.shields.io/badge/DE-Hyprland-7c52a1)
