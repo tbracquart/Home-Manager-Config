@@ -1,12 +1,10 @@
 { config, pkgs, ... }:
 
-let
-  plasma-manager = builtins.fetchTarball "https://github.com/nix-community/plasma-manager/archive/trunk.tar.gz";
-in
+{ config, pkgs, ... }:
 
 {
   imports = [
-    <plasma-manager/home-manager-module>  # 👈 Module depuis le channel
+    <plasma-manager/modules/home-manager>  # 👈 Chemin corrigé
     ./modules/plasma.nix
     ./modules/packages.nix
     ./modules/shell.nix
