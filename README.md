@@ -34,7 +34,7 @@ Puis remplacer le fichier généré par celui de ce dépôt :
 ```bash
 git clone https://github.com/tbracquart/Home-Manager-Config ~/Home-Manager-Config
 rm ~/.config/home-manager/home.nix
-ln -s ~/Home-Manager-Config/home.nix ~/.config/home-manager/home.nix
+mv ~/Home-Manager-Config/home.nix ~/.config/home-manager/home.nix
 home-manager switch
 ```
 
