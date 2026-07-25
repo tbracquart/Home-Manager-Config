@@ -2,7 +2,7 @@
 
 {
   imports = [
-    <plasma-manager/modules>
+#     <plasma-manager/modules>
     ./modules/default.nix
   ];
 

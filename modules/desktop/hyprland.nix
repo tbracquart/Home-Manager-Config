@@ -1,201 +1,139 @@
-# Home-Manager-Config/modules/desktop/hyprland.nix
 { config, pkgs, lib, ... }:
 
-let
-  lua = lib.generators.mkLuaInline;
-in
 {
+  programs.kitty.enable = true;
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "lua"; # 👈 FORCER LE FORMAT LUA
+    configType = "lua";
     systemd.enable = false;
+    settings = { };
 
-    settings = {
-      # ---- VARIABLES GLOBALES ----
-      mod = { _var = "SUPER"; };
+    extraConfig = ''
+      -- ============================================================
+      --  CONFIGURATION PRINCIPALE (hl.config)
+      -- ============================================================
+      hl.config({
+        general = {
+          gaps_in = 5,
+          gaps_out = 20,
+          border_size = 2,
+          -- ✅ Correction : couleur unique
+          ["col.active_border"] = "0xff33ccff",
+          ["col.inactive_border"] = "0xff595959",
+          layout = "dwindle"
+        },
+        decoration = {
+          rounding = 10,
+          blur = {
+            enabled = true,
+            size = 3,
+            passes = 1
+          },
+          shadow = {
+            enabled = true,
+            range = 4,
+            color = 0xee1a1a1a
+          }
+        },
+        input = {
+          kb_layout = "fr",
+          kb_variant = "latin9",
+          follow_mouse = 1,
+          touchpad = {
+            natural_scroll = true,
+            tap_to_click = true
+          }
+        }
+      })
 
-      # ---- GENERAL ----
-      general = {
-        gaps_in = 5;
-        gaps_out = 20;
-        border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg"; # Exemple
-        "col.inactive_border" = "rgba(595959aa)";
-        layout = "dwindle";
-      };
+      -- ============================================================
+      --  MONITEUR
+      -- ============================================================
+      hl.monitor({
+        output = "eDP-1",
+        mode = "1920x1080@60",
+        position = "auto",
+        scale = 1
+      })
 
-      # ---- DECORATIONS ----
-      decoration = {
-        rounding = 10;
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-        };
-        drop_shadow = true;
-        shadow_range = 4;
-        "col.shadow" = "rgba(1a1a1aee)";
-      };
+      -- ============================================================
+      --  RACCOURCIS CLAVIER (hl.bind)
+      -- ============================================================
+      local mainMod = "SUPER"
 
-      # ---- ANIMATIONS ----
-      animations = {
-        enabled = true;
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
-        ];
-      };
+      -- Lancements
+      hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("kitty"))
+      hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("wofi --show drun"))
+      hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
-      # ---- RACCOURCIS CLAVIER ----
-      bind = [
-        # Lancements
-        {
-          _args = [
-            "SUPER + RETURN"
-            (lua "hl.exec_cmd('kitty')")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + D"
-            (lua "hl.exec_cmd('wofi --show drun')")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + Q"
-            (lua "hl.exec_cmd('kill')")
-          ];
-        }
-        # Gestion des fenêtres
-        {
-          _args = [
-            "SUPER + F"
-            (lua "hl.dsp.window.set_fullscreen('toggle')")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + SPACE"
-            (lua "hl.dsp.layout.toggle_floating()")
-          ];
-        }
-        # Workspaces
-        {
-          _args = [
-            "SUPER + 1"
-            (lua "hl.dsp.workspace.switch(1)")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + 2"
-            (lua "hl.dsp.workspace.switch(2)")
-          ];
-        }
-        # ... ajoute tous tes raccourcis
-      ];
+      -- Gestion des fenêtres
+      hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
+      hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
-      # ---- BINDES AVEC MODIFICATEURS ----
-      bindm = [
-        {
-          _args = [
-            "SUPER + mouse:272"
-            (lua "hl.dsp.window.move()")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + mouse:273"
-            (lua "hl.dsp.window.resize()")
-          ];
-        }
-      ];
+      -- Changer de workspace
+      hl.bind(mainMod .. " + 1", hl.dsp.focus({ workspace = 1 }))
+      hl.bind(mainMod .. " + 2", hl.dsp.focus({ workspace = 2 }))
+      hl.bind(mainMod .. " + 3", hl.dsp.focus({ workspace = 3 }))
+      hl.bind(mainMod .. " + 4", hl.dsp.focus({ workspace = 4 }))
+      hl.bind(mainMod .. " + 5", hl.dsp.focus({ workspace = 5 }))
+      hl.bind(mainMod .. " + 6", hl.dsp.focus({ workspace = 6 }))
+      hl.bind(mainMod .. " + 7", hl.dsp.focus({ workspace = 7 }))
+      hl.bind(mainMod .. " + 8", hl.dsp.focus({ workspace = 8 }))
+      hl.bind(mainMod .. " + 9", hl.dsp.focus({ workspace = 9 }))
+      hl.bind(mainMod .. " + 0", hl.dsp.focus({ workspace = 10 }))
 
-      # ---- REGLES DE FENETRES ----
-      window_rule = [
-        # Flotter certaines fenêtres
-        {
-          _args = [
-            (lua "hl.dsp.window.match({ class = 'firefox', title = '.*Preferences.*' })")
-            { floating = true; }
-          ];
-        }
-        {
-          _args = [
-            (lua "hl.dsp.window.match({ class = 'org.keepassxc.KeePassXC' })")
-            { floating = true; }
-          ];
-        }
-        # Envoyer sur un workspace spécifique
-        {
-          _args = [
-            (lua "hl.dsp.window.match({ class = 'discord' })")
-            { workspace = 3; }
-          ];
-        }
-        {
-          _args = [
-            (lua "hl.dsp.window.match({ class = 'steam_app_\\d+' })")
-            { fullscreen = "on"; }
-          ];
-        }
-      ];
+      -- ✅ Correction : utiliser hl.dsp.window.move({ workspace = N })
+      hl.bind(mainMod .. " + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
+      hl.bind(mainMod .. " + SHIFT + 2", hl.dsp.window.move({ workspace = 2 }))
+      hl.bind(mainMod .. " + SHIFT + 3", hl.dsp.window.move({ workspace = 3 }))
+      hl.bind(mainMod .. " + SHIFT + 4", hl.dsp.window.move({ workspace = 4 }))
+      hl.bind(mainMod .. " + SHIFT + 5", hl.dsp.window.move({ workspace = 5 }))
 
-      # ---- LANCEMENT AU DEMARRAGE ----
-      on = [
-        # Noctalia V5
-        {
-          _args = [
-            "hyprland.start"
-            (lua ''
-              function()
-                hl.exec_cmd("noctalia")
-              end
-            '')
-          ];
-        }
-        # Fond d'écran (si tu utilises hyprpaper)
-        {
-          _args = [
-            "hyprland.start"
-            (lua "hl.exec_cmd('hyprpaper')")
-          ];
-        }
-        # Barre (ex: waybar)
-        {
-          _args = [
-            "hyprland.start"
-            (lua "hl.exec_cmd('waybar')")
-          ];
-        }
-      ];
+      -- ============================================================
+      --  RACCOURCIS SOURIS
+      -- ============================================================
+      hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag())
+      hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize())
 
-      # ---- AUTRES OPTIONS ----
-      input = {
-        kb_layout = "fr";
-        kb_variant = "latin9";
-        follow_mouse = 1;
-        touchpad = {
-          natural_scroll = true;
-          tap-to-click = true;
-        };
-      };
+      -- ============================================================
+      --  RÈGLES DE FENÊTRES (hl.window_rule)
+      -- ============================================================
+      hl.window_rule({
+        match = { class = "firefox", title = ".*Preferences.*" },
+        float = true
+      })
+      hl.window_rule({
+        match = { class = "org.keepassxc.KeePassXC" },
+        float = true
+      })
+      hl.window_rule({
+        match = { class = "discord" },
+        workspace = 3
+      })
 
-      # Gestion de l'écran
-      monitor = [
-        {
-          _args = [
-            "eDP-1"
-            (lua "hl.dsp.monitor.set('1920x1080@60', 'auto', 1)")
-          ];
-        }
-      ];
-    };
+      -- ============================================================
+      --  LANCEMENT AU DÉMARRAGE (hl.on)
+      -- ============================================================
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("noctalia")
+      end)
+
+      -- ============================================================
+      --  ANIMATIONS
+      -- ============================================================
+      hl.curve("myBezier", { type = "bezier", points = { {0.05, 0.9}, {0.1, 1.05} } })
+      hl.curve("winIn", { type = "bezier", points = { {0.1, 1.1}, {0.1, 1.1} } })
+      hl.curve("winOut", { type = "bezier", points = { {0.3, -0.3}, {0, 1} } })
+      hl.curve("liner", { type = "bezier", points = { {1, 1}, {1, 1} } })
+
+      hl.animation({ leaf = "windows", enabled = true, speed = 6, bezier = "myBezier", style = "slide" })
+      hl.animation({ leaf = "windowsIn", enabled = true, speed = 6, bezier = "winIn", style = "slide" })
+      hl.animation({ leaf = "windowsOut", enabled = true, speed = 5, bezier = "winOut", style = "slide" })
+      hl.animation({ leaf = "windowsMove", enabled = true, speed = 5, bezier = "myBezier", style = "slide" })
+      hl.animation({ leaf = "border", enabled = true, speed = 1, bezier = "liner" })
+      hl.animation({ leaf = "borderangle", enabled = true, speed = 30, bezier = "liner", style = "loop" })
+      hl.animation({ leaf = "fade", enabled = true, speed = 10, bezier = "default" })
+      hl.animation({ leaf = "workspaces", enabled = true, speed = 5, bezier = "myBezier" })
+    '';
   };
 }
