@@ -91,32 +91,3 @@ Sans option, ces commandes agissent à la fois sur le système et l'utilisateur.
 ## Note
 
 Ce dépôt est encore en évolution — il s'enrichit au fur et à mesure que j'ajoute des dotfiles et des configurations d'applications.
-```
-
----
-
-## Ce qui a changé dans le README
-
-| Point | Avant | Après |
-|-------|-------|-------|
-| **Structure** | Non documentée | Arborescence complète des `modules/` |
-| **Organisation** | Non expliquée | Chaque dossier est décrit |
-| **Commandes Fish** | Absentes | Listées avec leurs options |
-| **Installation** | `mv` | `ln -s` (plus propre) |
-| **Version** | "encore minimal" | "encore en évolution" |
-
----
-
-## 🔧 Action
-
-```fish
-# Remplacer le README
-cat > README.md << 'EOF'
-[... contenu ci-dessus ...]
-EOF
-
-# Commit
-git add README.md
-git commit -m "docs: update README to reflect current modular structure"
-git push
-```
