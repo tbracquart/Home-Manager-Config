@@ -113,18 +113,14 @@
       hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
       -- Changer de workspace
-      local function bind_workspaces(hl, mod)
-        local keys = { "&", "é", "\"", "'", "(", "-", "è", "_", "ç", "à" }
+      local keys = { "ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underscore", "ccedilla", "agrave" }
 
-        for i = 1, #keys do
-          local key = keys[i]
+      for i, key in ipairs(keys) do
+        -- Naviguer vers le workspace i
+        hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = i }))
 
-          hl.bind(mod .. " + " .. key,
-            hl.dsp.focus({ workspace = i }))
-
-          hl.bind(mod .. " + SHIFT + " .. key,
-            hl.dsp.window.move({ workspace = i }))
-        end
+        -- Déplacer la fenêtre vers le workspace i
+        hl.bind("SUPER + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
       end
 
       -- ============================================================
