@@ -1,10 +1,16 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 let
+  noctalia-src = fetchTarball "https://github.com/noctalia-dev/noctalia/archive/main.tar.gz";
+  noctalia = import noctalia-src { inherit pkgs; };
+
   wallpaperDir = "${config.home.homeDirectory}/Images/Fonds d'écran";
   wallpaperFile = "wp12329556-nixos-wallpapers.png";
   wallpaperPath = "${wallpaperDir}/${wallpaperFile}";
 in
+{
+  imports = [ noctalia.homeModule ];
+
 {
   audio = {
     enable_sounds = true;
