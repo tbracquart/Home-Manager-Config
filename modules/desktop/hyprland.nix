@@ -129,7 +129,7 @@
       -- cf. https://docs.noctalia.dev/v5/compositor-settings/hyprland/
       local ipc = "noctalia msg "
 
-      hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
+      hl.bind(mainMod, hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"), { release = true })
       hl.bind(mainMod .. " + S", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
       hl.bind(mainMod .. " + COMMA", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
       hl.bind("ALT + TAB", hl.dsp.exec_cmd(ipc .. "window-switcher"))
