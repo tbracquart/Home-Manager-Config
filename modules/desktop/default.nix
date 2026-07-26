@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./hyprland.nix
     ./plasma.nix
+    ./hyprland/default.nix
   ];
 }
