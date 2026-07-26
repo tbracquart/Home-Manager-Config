@@ -28,8 +28,10 @@
           layout = "dwindle"
         },
         decoration = {
-          rounding = 10,
-          rounding_power = 2,
+          rounding = 15,
+          rounding_power = 3,
+          active_opacity = 0.90,
+          inactive_opacity = 0.75,
           blur = {
             enabled = true,
             size = 3,
@@ -65,16 +67,34 @@
       })
 
       -- ============================================================
-      --  RÈGLES DE CALQUE (Noctalia) — flou de la barre et des panneaux
+      --  RÈGLES DE CALQUE (Noctalia) — flou barre/panneaux/dock/notifs
       -- ============================================================
-      -- cf. https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
+      -- cf. https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+      -- (namespace v5, différent de la v4 : bar/notification/dock/panel/
+      -- attached-panel/osd/window-switcher, tous préfixés "noctalia-").
+      -- no_anim désactive les animations de calque natives de Hyprland
+      -- pour ne pas interférer avec les animations propres de Noctalia.
       hl.layer_rule({
         name = "noctalia",
-        match = { namespace = "noctalia-background-.*$" },
+        match = {
+          namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$"
+        },
+        no_anim = true,
         ignore_alpha = 0.5,
         blur = true,
         blur_popups = true
       })
+
+      -- ============================================================
+      --  WORKSPACES PERSISTANTS (recommandé par Noctalia)
+      -- ============================================================
+      -- Garde les workspaces vides visibles dans l'indicateur Noctalia
+      -- au lieu de n'afficher que ceux qui contiennent des fenêtres.
+      hl.workspace_rule({ workspace = "1", monitor = "eDP-1", persistent = true })
+      hl.workspace_rule({ workspace = "2", monitor = "eDP-1", persistent = true })
+      hl.workspace_rule({ workspace = "3", monitor = "eDP-1", persistent = true })
+      hl.workspace_rule({ workspace = "4", monitor = "eDP-1", persistent = true })
+      hl.workspace_rule({ workspace = "5", monitor = "eDP-1", persistent = true })
 
       -- ============================================================
       --  RACCOURCIS CLAVIER (hl.bind)
@@ -83,13 +103,13 @@
 
       -- Lancements
       hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("kitty"))
-      -- Le lanceur d'applications est fourni par Noctalia (pas besoin de
-      -- wofi/rofi) : voir les keybinds par défaut de Noctalia pour le bind
-      -- exact du launcher (SUPER + D peut rester réservé à Noctalia).
       hl.bind(mainMod .. " + Q", hl.dsp.window.close())
+      hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("firefox"))
+      hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("dolphin"))
 
       -- Gestion des fenêtres
       hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
+      hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
       hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
       -- Changer de workspace
@@ -111,6 +131,24 @@
       hl.bind(mainMod .. " + SHIFT + 5", hl.dsp.window.move({ workspace = 5 }))
 
       -- ============================================================
+      --  RACCOURCIS IPC NOCTALIA (recommandés par la doc officielle v5)
+      -- ============================================================
+      -- cf. https://docs.noctalia.dev/v5/compositor-settings/hyprland/
+      local ipc = "noctalia msg "
+
+      hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
+      hl.bind(mainMod .. " + S", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
+      hl.bind(mainMod .. " + COMMA", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
+      hl.bind("ALT + TAB", hl.dsp.exec_cmd(ipc .. "window-switcher"))
+
+      -- Touches multimédia
+      hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. "volume-up"))
+      hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. "volume-down"))
+      hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc .. "volume-mute"))
+      hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. "brightness-up"))
+      hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. "brightness-down"))
+
+      -- ============================================================
       --  RACCOURCIS SOURIS
       -- ============================================================
       hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag())
@@ -130,6 +168,13 @@
       hl.window_rule({
         match = { class = "discord" },
         workspace = 3
+      })
+
+      -- Fenêtre de réglages Noctalia : flottante, taille fixe (recommandé)
+      hl.window_rule({
+        match = { class = "dev.noctalia.Noctalia" },
+        float = true,
+        size = { 1080, 920 }
       })
 
       -- ============================================================
