@@ -113,22 +113,19 @@
       hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
       -- Changer de workspace
-      hl.bind(mainMod .. " + 1", hl.dsp.focus({ workspace = 1 }))
-      hl.bind(mainMod .. " + 2", hl.dsp.focus({ workspace = 2 }))
-      hl.bind(mainMod .. " + 3", hl.dsp.focus({ workspace = 3 }))
-      hl.bind(mainMod .. " + 4", hl.dsp.focus({ workspace = 4 }))
-      hl.bind(mainMod .. " + 5", hl.dsp.focus({ workspace = 5 }))
-      hl.bind(mainMod .. " + 6", hl.dsp.focus({ workspace = 6 }))
-      hl.bind(mainMod .. " + 7", hl.dsp.focus({ workspace = 7 }))
-      hl.bind(mainMod .. " + 8", hl.dsp.focus({ workspace = 8 }))
-      hl.bind(mainMod .. " + 9", hl.dsp.focus({ workspace = 9 }))
-      hl.bind(mainMod .. " + 0", hl.dsp.focus({ workspace = 10 }))
+      local function bind_workspaces(hl, mod)
+        local keys = { "&", "é", "\"", "'", "(", "-", "è", "_", "ç", "à" }
 
-      hl.bind(mainMod .. " + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
-      hl.bind(mainMod .. " + SHIFT + 2", hl.dsp.window.move({ workspace = 2 }))
-      hl.bind(mainMod .. " + SHIFT + 3", hl.dsp.window.move({ workspace = 3 }))
-      hl.bind(mainMod .. " + SHIFT + 4", hl.dsp.window.move({ workspace = 4 }))
-      hl.bind(mainMod .. " + SHIFT + 5", hl.dsp.window.move({ workspace = 5 }))
+        for i = 1, #keys do
+          local key = keys[i]
+
+          hl.bind(mod .. " + " .. key,
+            hl.dsp.focus({ workspace = i }))
+
+          hl.bind(mod .. " + SHIFT + " .. key,
+            hl.dsp.window.move({ workspace = i }))
+        end
+      end
 
       -- ============================================================
       --  RACCOURCIS IPC NOCTALIA (recommandés par la doc officielle v5)
