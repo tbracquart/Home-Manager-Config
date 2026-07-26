@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ./kdeconnect.nix
+    ./services.nix
   ];
 }
