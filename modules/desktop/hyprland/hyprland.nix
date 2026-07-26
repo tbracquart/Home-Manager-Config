@@ -110,7 +110,7 @@
       -- Gestion des fenêtres
       hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ action = "toggle" }))
       hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
-      hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
+      hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.window.float({ action = "toggle" }))
 
       -- Changer de workspace
       local keys = { "ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underscore", "ccedilla", "agrave" }
@@ -129,7 +129,7 @@
       -- cf. https://docs.noctalia.dev/v5/compositor-settings/hyprland/
       local ipc = "noctalia msg "
 
-      hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
+      hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
       hl.bind(mainMod .. " + S", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
       hl.bind(mainMod .. " + COMMA", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
       hl.bind("ALT + TAB", hl.dsp.exec_cmd(ipc .. "window-switcher"))
