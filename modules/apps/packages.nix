@@ -7,8 +7,5 @@
     netflix
     ytmdesktop
     klavaro
-    whitesur-kde
-    whitesur-gtk-theme
-    whitesur-icon-theme
   ];
 }
