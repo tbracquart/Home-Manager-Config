@@ -11,27 +11,10 @@ in
 {
   imports = [ noctalia.homeModule ];
 
-  # Template Noctalia qui régénère hypr/scheme/current.lua (couleurs Caelestia)
-  # à chaque changement de palette. Mappe les 48 tokens Material de Noctalia
-  # vers le format attendu par les fichiers hypr/*.lua de Caelestia.
-  # cf. https://docs.noctalia.dev/v5/theming/app-theming/
-  xdg.configFile."noctalia/templates/caelestia-scheme.lua.tmpl".source = ./caelestia-scheme.lua.tmpl;
-
   programs.noctalia = {
     enable = true;
 
     settings = {
-      theme = {
-        templates = {
-          user = {
-            caelestia_scheme = {
-              input_path = "$XDG_CONFIG_HOME/noctalia/templates/caelestia-scheme.lua.tmpl";
-              output_path = "$XDG_CONFIG_HOME/hypr/scheme/current.lua";
-            };
-          };
-        };
-      };
-
       audio = {
         enable_sounds = true;
       };
